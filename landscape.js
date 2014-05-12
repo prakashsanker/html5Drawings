@@ -11,17 +11,33 @@ globYAngle = 40;
 globWidth = 400;
 globHeight = 400;
 
-function Building(centerX, centerY, xAngle, yAngle, width, height) {
+
+function Building(centerX, centerY, xAngle, yAngle, width, height, context) {
 	this.centerX = centerX;
 	this.centerY = centerY;
 	this.xAngle = xAngle;
 	this.yAngle = yAngle;
 	this.width = width;
 	this.height = height;
-	this.draw = function(context, request) {
-		
-	};
+	this.lines = [];
+	this.context = context;
+	var line1 = new Line(centerX, centerY, centerX, centerY - height);
+	var yToDrawTo = (centerY - height) - ((width/2) * getTanDeg(xAngle));
+	var line2 = new Line(centerX, centerY - height, centerX + width/2, yToDrawTo);
+	var line3 = new Line(centerX + width/2, yToDrawTo, centerX + width/2, yToDrawTo + height);
+	var line4 = new Line(centerX + width/2, yToDrawTo + height, centerX, centerY);
 
+	this.lines.push(line1);
+	this.lines.push(line2);
+	this.lines.push(line3);
+	this.lines.push(line4);
+
+	this.draw = function(context, request) {
+		this.lines[2].draw(this.context);
+		// for(var i = 0; i < this.lines.length; i++){
+		// 	this.lines[i].draw(this.context);
+		// }
+	};
 }
 
 function Line (startX, startY, endX, endY) {
@@ -49,18 +65,21 @@ function Line (startX, startY, endX, endY) {
 }
 
 function animateWrapper(centerX, centerY, xAngle, yAngle, width, height) {
-
 	var line = new Line(centerX, centerY, centerX, centerY - height);
 	var canvas = document.getElementById("drawing");
 	var context = canvas.getContext('2d');
-	console.log("REQUEST");
+	var building = new Building(centerX, centerY, xAngle, yAngle, width, height, context);
 	animate();
+
+	console.log(building);
 	console.log(request);
-	function animate() {
+	function animate() {	var request = requestAnimationFrame(animate);
+
 		console.log("ANIMATE CALLED");
-		var request = requestAnimationFrame(animate);
-		line.draw(context, request);
-	}
+		building.draw();
+	};
+
+
 }
 
 function animatedDrawLine(startX, startY, endX, endY) {
