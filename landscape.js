@@ -3,56 +3,80 @@ function getTanDeg(deg) {
    var rad = deg * Math.PI/180;
    return Math.tan(rad);
 }
-var step = 0;
-var globCenterX = 0;
-var globCenterY = 0;
-var globXAngle = 0;
-var globYAngle = 0;
-var globWidth = 0;
-var globHeight = 0;
+step = 0;
+globCenterX = 100;
+globCenterY = 100;
+globXAngle = 40;
+globYAngle = 40;
+globWidth = 400;
+globHeight = 400;
+
+function Building(centerX, centerY, xAngle, yAngle, width, height) {
+	this.centerX = centerX;
+	this.centerY = centerY;
+	this.xAngle = xAngle;
+	this.yAngle = yAngle;
+	this.width = width;
+	this.height = height;
+	this.draw = function(context, request) {
+		
+	};
+
+}
+
+function Line (startX, startY, endX, endY) {
+	this.startX = startX;
+	this.startY = startY;
+	this.endX = endX;
+	this.endY = endY;
+	this.draw = function(context, request) {
+		context.beginPath();
+		console.log("DRAW");
+		context.moveTo(this.startX, this.startY);
+		console.log(this.startX);
+		console.log(this.startY);
+		step += 0.005;
+		if (step > 1) step = 1;
+		var newX = this.startX + (this.endX - this.startX) * step;
+		var newY = this.startY + (this.endY - this.startY) * step;
+		context.lineTo(newX, newY);
+		context.stroke();
+		if (Math.abs(newX) >= Math.abs(this.endX) && Math.abs(newY) >= Math.abs(this.endY)) {
+			//now trigger the next using Backbone Events
+			step = 0;
+		}
+	};
+}
 
 function animateWrapper(centerX, centerY, xAngle, yAngle, width, height) {
-	var request = requestAnimationFrame(animate);
-//	drawBuilding(centerX, centerY, xAngle, yAngle, width, height);
+
+	var line = new Line(centerX, centerY, centerX, centerY - height);
 	var canvas = document.getElementById("drawing");
 	var context = canvas.getContext('2d');
-	function animate (centerX, centerY, xAngle, width, height) {
-		drawLine(centerX,centerY, centerX, centerY - height, context, request);
+	console.log("REQUEST");
+	animate();
+	console.log(request);
+	function animate() {
+		console.log("ANIMATE CALLED");
+		var request = requestAnimationFrame(animate);
+		line.draw(context, request);
 	}
+}
+
+function animatedDrawLine(startX, startY, endX, endY) {
 
 
-
-	// context.moveTo(centerX, centerY);
-	// var yToDrawTo = (centerY - height) - ((width/2) * getTanDeg(xAngle));
-	// drawLine(centerX, centerY - height, centerX + width/2, yToDrawTo, context, request);
-	//drawLine(0,0, 100, 100, context, request);
 }
 
 function drawLine(startX, startY, endX, endY, context, request) {
 	context.beginPath();
 	context.moveTo(startX, startY);
-	step += 0.05;
-	console.log("STEP");
-	console.log(step);
+	step += 0.005;
 	// if (step > 1) step = 1;
 	var newX = startX + (endX - startX) * step;
 	var newY = startY + (endY - startY) * step;
 	context.lineTo(newX, newY);
 	context.stroke();
-	console.log("startX");
-	console.log(startX);
-	console.log("START Y");
-	console.log(startY);
-
-	console.log("NEW X");
-	console.log(newX);
-	console.log("END X");
-	console.log(endX);
-	console.log("NEW Y");
-	console.log(newY);
-	console.log("END Y");
-	console.log(endY);
-	console.log("=====");
 	if (Math.abs(newX) >= Math.abs(endX) && Math.abs(newY) >= Math.abs(endY)) {
 		cancelAnimationFrame(request);
 		step = 0;
