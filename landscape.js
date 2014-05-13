@@ -10,31 +10,6 @@ globXAngle = 40;
 globYAngle = 40;
 globWidth = 400;
 globHeight = 400;
-	// var canvas = document.getElementById("drawing");
-	// var context = canvas.getContext('2d');
-	// context.beginPath();
-	// context.moveTo(centerX, centerY);
-	// //draw center line
-	// context.lineTo(centerX, centerY - height);
-	// //draw upper right line
-	// var yToDrawTo = (centerY - height) - ((width/2) * getTanDeg(xAngle));
-	// var topFaceHeight = yToDrawTo;
-	// context.lineTo(centerX + width/2, yToDrawTo);
-	// context.lineTo(centerX + width/2, yToDrawTo + height);
-	// context.lineTo(centerX, centerY);
-
-	// yToDrawTo = centerY - ((width/2) * getTanDeg(xAngle));
-	// console.log(yToDrawTo);
-
-	// context.lineTo(centerX - width/2, yToDrawTo);
-	// context.lineTo(centerX - width/2, yToDrawTo - height);
-	// context.lineTo(centerX, centerY - height);
-	// context.moveTo(centerX - width/2, yToDrawTo - height);
-	// var topFaceHeight = getTanDeg(xAngle) * (width/2);
-	// context.lineTo(centerX, centerY  - height -  topFaceHeight * 2);
-	// yToDrawTo = (centerY - height) - ((width/2) * getTanDeg(xAngle));
-	// context.lineTo(centerX + width/2, yToDrawTo);
-	// context.stroke();
 
 function Building(centerX, centerY, xAngle, yAngle, width, height, context) {
 	this.centerX = centerX;
@@ -70,21 +45,15 @@ function Building(centerX, centerY, xAngle, yAngle, width, height, context) {
 	this.lines.push(line9);
 
 	this.draw = function(context, request) {
-		console.log(" IN THIS> DRAW");
-		console.log(this.lines);
-		console.log("startX");
-		console.log(centerX);
-		console.log("START Y");
-		console.log(centerY);
-		console.log("endX");
-		console.log(centerX);
-		console.log("endY");
-		console.log(centerY - height);
-		// this.lines[0].draw(this.context, request);
 		for(var i = 0; i < this.lines.length; i++){
 			this.lines[i].draw(this.context);
 		}
 	};
+
+	this.addWindows = function(nWindows) {
+		var heightPerWindow = this.height/nWindows;
+		for(var i = 0; i < )
+	}
 }
 
 function Line (startX, startY, endX, endY) {
@@ -94,19 +63,12 @@ function Line (startX, startY, endX, endY) {
 	this.endY = endY;
 	this.draw = function(context, request) {
 		context.beginPath();
-		console.log("DRAW");
 		context.moveTo(this.startX, this.startY);
 		step += 0.0005;
 		if (step > 1) step = 1;
 
 		var newX = this.startX + (this.endX - this.startX) * step;
 		var newY = this.startY + (this.endY - this.startY) * step;
-		console.log("NEW X");
-		console.log(newX);
-		console.log("NEW Y");
-		console.log(newY);
-		console.log("CALCULATION");
-		console.log("=====");
 		context.lineTo(newX, newY);
 		context.stroke();
 		if (Math.abs(newX) >= Math.abs(this.endX) && Math.abs(newY) >= Math.abs(this.endY)) {
@@ -192,5 +154,5 @@ function drawBuilding(centerX, centerY, xAngle, yAngle, width, height) {
 
 }
 $(document).ready(function(){
-	animateWrapper(600, 800, 40, 40, 400, 400);
+	animateWrapper(600, 800, 20, 20, 400, 400);
 });
