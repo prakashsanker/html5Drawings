@@ -52,15 +52,31 @@ function Building(centerX, centerY, xAngle, yAngle, width, height, context) {
 
 	this.addWindows = function(nWindows) {
 		var heightPerWindow = this.height/nWindows;
-		for(var i = 0; i < )
+		var yToDrawToLeft = centerY - ((width/2) * getTanDeg(xAngle));
+		var yToDrawToRight = (centerY - height) - ((width/2) * getTanDeg(xAngle));
+		var windowLines = [];
+	var line4 = new Line(centerX + width/2, yToDrawTo + height, centerX, centerY);
+
+		for(var i = 0; i < nWindows; i++){
+			var windowLineLeft = new Line(centerX, centerY - heightPerWindow*i, centerX - width/2, yToDrawToLeft - heightPerWindow*i);
+			windowLines.push(windowLineLeft);
+			var windowLineRight = new Line(centerX + width/2, yToDrawToRight + heightPerWindow*i, centerX, centerY - height +  heightPerWindow*i);
+			windowLines.push(windowLineRight);
+		};
+		for (var i = 0; i < windowLines.length; i++) {
+			windowLines[i].draw(this.context);
+		}
+
 	}
 }
 
-function Line (startX, startY, endX, endY) {
+function Line (startX, startY, endX, endY, strokeColor, width) {
 	this.startX = startX;
 	this.startY = startY;
 	this.endX = endX;
 	this.endY = endY;
+	this.strokeColor = strokeColor;
+	this.width = width;
 	this.draw = function(context, request) {
 		context.beginPath();
 		context.moveTo(this.startX, this.startY);
@@ -71,6 +87,13 @@ function Line (startX, startY, endX, endY) {
 		var newY = this.startY + (this.endY - this.startY) * step;
 		context.lineTo(newX, newY);
 		context.stroke();
+
+		if (typeof this.strokeColor !== undefined) {
+			context.strokeStyle = this.strokeColor;
+		} 
+		if (typeof this.width !== undefined) {
+			context.lineWidth = this.width;
+		}
 		if (Math.abs(newX) >= Math.abs(this.endX) && Math.abs(newY) >= Math.abs(this.endY)) {
 			// cancelAnimationFrame(request);
 			//now trigger the next using Backbone Events
@@ -99,6 +122,7 @@ function animateWrapper(centerX, centerY, xAngle, yAngle, width, height) {
 		// line.draw(context, request);
 		requestAnimationFrame(animate);
 		building.draw();
+		building.addWindows(20, "#d3d3d3", 2);
 	};
 
 
