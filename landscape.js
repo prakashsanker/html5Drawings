@@ -70,6 +70,20 @@ function Building(centerX, centerY, xAngle, yAngle, width, height, context) {
 	}
 }
 
+function CurvedLine (startX, startY, endX, endY, maxDistanceFromCenter) {
+	this.startX = startX;
+	this.startY = startY;
+	this.endX = endX;
+	this.endY = endY;
+	this.maxDistanceFromCenter = maxDistanceFromCenter;
+	this.draw = function(context, request) {
+		context.beginPath();
+		context.animatedCurve([this.startX, this.startY, 20, 30, 840, 24, this.endX, this.endY], 0, 20, true);
+	};
+}
+
+
+
 function Line (startX, startY, endX, endY, strokeColor, width) {
 	this.startX = startX;
 	this.startY = startY;
@@ -86,7 +100,6 @@ function Line (startX, startY, endX, endY, strokeColor, width) {
 		var newX = this.startX + (this.endX - this.startX) * step;
 		var newY = this.startY + (this.endY - this.startY) * step;
 		context.lineTo(newX, newY);
-		context.stroke();
 
 		if (typeof this.strokeColor !== undefined) {
 			context.strokeStyle = this.strokeColor;
@@ -94,6 +107,8 @@ function Line (startX, startY, endX, endY, strokeColor, width) {
 		if (typeof this.width !== undefined) {
 			context.lineWidth = this.width;
 		}
+		context.stroke();
+
 		if (Math.abs(newX) >= Math.abs(this.endX) && Math.abs(newY) >= Math.abs(this.endY)) {
 			// cancelAnimationFrame(request);
 			//now trigger the next using Backbone Events
@@ -178,5 +193,10 @@ function drawBuilding(centerX, centerY, xAngle, yAngle, width, height) {
 
 }
 $(document).ready(function(){
-	animateWrapper(600, 800, 20, 20, 400, 400);
+	// animateWrapper(600, 800, 20, 20, 400, 400);
+	var curvedLine = new CurvedLine(100,100,200,225);
+	var canvas = document.getElementById("drawing");
+	var context = canvas.getContext('2d');
+	curvedLine.draw(context);
+
 });
