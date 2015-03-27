@@ -22,15 +22,10 @@ CanvasRenderingContext2D.prototype.animatedCurve = function(points, tension, num
 	var points = CanvasRenderingContext2D.prototype.curve(points, tension, numOfSeg, close);
 	var i = 0;
 	var that = this;
-	console.log("POINTS");
-	console.log(points);
 	animateCurve();
+	console.log(points);
 	function animateCurve() {
 		var request = requestAnimationFrame(animateCurve);
-		console.log("ANIMATE CALLED");
-		console.log(points[i]);
-		console.log(points[i+1]);
-		console.log("=====");
 		that.lineTo(points[i], points[i+1]);
 		if ( i > points.length - 2){
 			cancelAnimationFrame(request);
@@ -124,9 +119,10 @@ CanvasRenderingContext2D.prototype.curve = function(points, tension, numOfSeg, c
 		}
 	}
 
-	// add lines to path
-	// for(i = 0, l = res.length; i < l; i += 2)
-	// 	this.lineTo(res[i], res[i+1]);
+//	add lines to path
+//	comment this out for animatedCurve draw
+	for(i = 0, l = res.length; i < l; i += 2)
+		this.lineTo(res[i], res[i+1]);
 
 	return res;
 };

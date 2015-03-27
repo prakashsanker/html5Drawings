@@ -11,6 +11,7 @@ globYAngle = 40;
 globWidth = 400;
 globHeight = 400;
 
+
 function Building(centerX, centerY, xAngle, yAngle, width, height, context) {
 	this.centerX = centerX;
 	this.centerY = centerY;
@@ -70,18 +71,37 @@ function Building(centerX, centerY, xAngle, yAngle, width, height, context) {
 	}
 }
 
-function CurvedLine (startX, startY, endX, endY, maxDistanceFromCenter) {
-	this.startX = startX;
-	this.startY = startY;
-	this.endX = endX;
-	this.endY = endY;
-	this.maxDistanceFromCenter = maxDistanceFromCenter;
-	this.draw = function(context, request) {
-		context.beginPath();
-		context.animatedCurve([this.startX, this.startY, 20, 30, 840, 24, this.endX, this.endY], 0, 20, true);
-	};
+function randomIntFromInterval(min, max) {
+	return Math.floor(Math.random()*(max - min +1) + min);
 }
 
+function Bush(centerX, centerY, radius) {
+	this.centerX = centerX;
+	this.centerY = centerY;
+	this.radius = radius;
+	this.draw = function(context) {
+		var leftMostX = randomIntFromInterval(centerX - radius/2 - 2, centerX - radius/2 + 2);
+		var rightMostX = randomIntFromInterval(centerX + radius/2 - 2, centerX + radius/2 - 2);
+		var topMostY = randomIntFromInterval(centerY - radius/2 - 2, centerY - radius/2 + 2);
+		context.stroke();
+	}
+}
+
+function CurvedLine (points, maxDistanceFromCenter) {
+	// this.startX = startX;
+	// this.startY = startY;
+	// this.endX = endX;
+	// this.endY = endY;
+	this.points = points;
+	// this.maxDistanceFromCenter = maxDistanceFromCenter;
+	this.draw = function(context, request) {
+		context.beginPath();
+		//change this to animatedCurve
+		context.animatedCurve(this.points, 0.5, 20, false);
+		context.stroke();
+		context.closePath();
+	};
+}
 
 
 function Line (startX, startY, endX, endY, strokeColor, width) {
@@ -91,6 +111,7 @@ function Line (startX, startY, endX, endY, strokeColor, width) {
 	this.endY = endY;
 	this.strokeColor = strokeColor;
 	this.width = width;
+
 	this.draw = function(context, request) {
 		context.beginPath();
 		context.moveTo(this.startX, this.startY);
@@ -118,23 +139,14 @@ function Line (startX, startY, endX, endY, strokeColor, width) {
 
 function animateWrapper(centerX, centerY, xAngle, yAngle, width, height) {
 	var yToDrawTo = (centerY - height) - ((width/2) * getTanDeg(xAngle));
-	console.log("CENTER X");
-	console.log(centerX);
-	console.log("CENTER Y - height");
-	console.log(centerY - height);
-	console.log("CENTER X + WIDTH /2");
-	console.log(centerX + width/2);
-	console.log("Y to draw to");
-	console.log(yToDrawTo);
 	var line = new Line(centerX, centerY - height, centerX + width/2, yToDrawTo);
 	var canvas = document.getElementById("drawing");
 	var context = canvas.getContext('2d');
 
-	var building = new Building(centerX, centerY, xAngle, yAngle, width, height, context);
+	//var building = new Building(centerX, centerY, xAngle, yAngle, width, height, context);
 	animate();
 
 	function animate() {	
-		// line.draw(context, request);
 		requestAnimationFrame(animate);
 		building.draw();
 		building.addWindows(20, "#d3d3d3", 2);
@@ -192,11 +204,75 @@ function drawBuilding(centerX, centerY, xAngle, yAngle, width, height) {
 	context.stroke();
 
 }
+
+function G(topLeftX, topLeftY, topRightX, topRightY, context) {
+	this.context = context;
+	this.lines = [];
+	var topLine = new CurvedLine()
+	this.lines.push(topLine);
+	this.draw = function(context, request) {
+		for(var i = 0; i < this.lines.length; i++){
+			this.lines[i].draw(context);
+		}
+	};
+
+
+}
 $(document).ready(function(){
-	// animateWrapper(600, 800, 20, 20, 400, 400);
-	var curvedLine = new CurvedLine(100,100,200,225);
+	//animateWrapper(600, 800, 20, 20, 400, 400);
+	var curvedLine = new CurvedLine([100,100, 120, 80, 140, 85]);
+	var g = new G(150, 100, 200, 225);
 	var canvas = document.getElementById("drawing");
 	var context = canvas.getContext('2d');
-	curvedLine.draw(context);
+	//g.draw(context);
+
+	var topGRight = new CurvedLine([140, 85, 180, 100]);
+
+
+	// context.curve([120, 80, 140, 90], 0, 20, false);
+	// context.stroke();
+	context.curve([100, 100, 140, 80], 0, 20, false);
+	context.stroke();
+	context.curve([140, 80, 160, 90], 0.2, 20, false);
+
+
+	context.stroke();
+	context.curve([140, 80, 126, 115, 120, 150], 0.5, 20, false);
+	context.stroke();
+	context.curve([120, 150, 100, 165], 0, 20, false);
+	context.stroke();
+	context.curve([100, 160, 100, 140], 0, 20, false);
+	context.curve([100, 140, 85, 185, 95, 185], 0.4, 20, false);
+	context.stroke();
+	context.curve([95, 185, 93, 180], 0, 20, false);
+	context.moveTo(100, 100);
+	context.curve([100, 100, 100, 120], 0, 20, false);
+	context.stroke();
+	context.curve([100,120, 50, 170, 60, 220, 100, 190], 0.7, 20, false);
+	context.stroke();
+	context.curve([100, 190, 102, 215], 0, 20, false);
+	context.stroke();
+	context.curve([102, 215, 120, 225], 0, 20, false);
+	context.stroke();
+	context.curve([120, 225, 110, 170], 0, 20, false);
+	context.stroke();
+	context.curve([110, 170, 93, 180], 0, 20, false);
+	context.stroke();
+
+	context.moveTo(160, 90);
+	context.curve([160, 90, 145, 120], 0, 20, false);
+	context.stroke();
+
+	context.moveTo()
+
+	// context.moveTo(120,150);
+	// context.curve([120, 150, 100, 100], 0, 20, false);
+	// context.stroke();
+
+		// var height = this.endY - this.startY;
+		// context.animatedCurve([this.startX, this.startY,this.startX - maxDistanceFromCenter, this.startY + height/2, this.endX, this.endY], 0.5, 20, false);
+		// context.stroke();
+
+
 
 });
