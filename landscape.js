@@ -252,9 +252,9 @@ $(document).ready(function(){
 	context.stroke();
 	context.curve([100, 190, 102, 215], 0, 20, false);
 	context.stroke();
-	context.curve([102, 215, 120, 225], 0, 20, false);
+	context.curve([102, 215, 120, 220], 0, 20, false);
 	context.stroke();
-	context.curve([120, 225, 110, 170], 0, 20, false);
+	context.curve([120, 220, 110, 170], 0, 20, false);
 	context.stroke();
 	context.curve([110, 170, 93, 180], 0, 20, false);
 	context.stroke();
@@ -263,7 +263,21 @@ $(document).ready(function(){
 	context.curve([160, 90, 145, 120], 0, 20, false);
 	context.stroke();
 
-	context.moveTo()
+	context.moveTo(115, 200);
+	context.curve([115, 200, 125, 202], 0, 20, false);
+	context.stroke();
+	context.curve([125, 202, 120, 175], 0, 20, false);
+	context.stroke();
+	context.curve([120, 175, 125, 180], 0, 20, false);
+	context.stroke();
+
+	context.curve([125, 180, 155, 175, 140, 200, 130, 240], 0.5, false);
+	context.stroke();
+
+
+
+
+
 
 	// context.moveTo(120,150);
 	// context.curve([120, 150, 100, 100], 0, 20, false);
